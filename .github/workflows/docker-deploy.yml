@@ -31,7 +31,7 @@ jobs:
         username: ${{ env.USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          echo "$PWD"
+          echo "hello world"
           mkdir -p action-created
 
     
