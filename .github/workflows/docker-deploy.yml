@@ -1,0 +1,37 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env: 
+        FLASK_HOST: "ec2-54-224-174-201.compute-1.amazonaws.com"
+        USERNAME: ubuntu
+        KEY: smarthire-ssh.pem
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Set KEY to workflows folder
+      run: echo "KEY=${{ github.workspace }}/.github/workflows/${{ env.KEY }}" >> $GITHUB_ENV
+
+    - name: Read SSH key
+      id: read_key
+      run: |
+        echo "::set-output name=key::$(cat ${{ env.KEY }})"
+
+    - name: Deploy Flask container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.FLASK_HOST}}
+        username: ${{ env.USERNAME }}
+        key: ${{ steps.read_key.outputs.key }}
+        script: |
+          echo "Deploying to AWS EC2"
+
+    
