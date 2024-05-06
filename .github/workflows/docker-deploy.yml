@@ -11,19 +11,11 @@ jobs:
     env: 
         FLASK_HOST: ${{ secrets.EC2_FLASK }}
         USERNAME: ubuntu
+        REPO: "https://github.com/htmw/2024S-Kodak.git"
+        REPO_DIR: "2024S-Kodak"
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
     
-    - name: Set KEY to workflows folder
-      run: echo "KEY=${{ github.workspace }}/.github/workflows/${{ env.KEY }}" >> $GITHUB_ENV
-
-    - name: Read SSH key
-      id: read_key
-      run: |
-        echo "::set-output name=key::$(cat ${{ env.KEY }})"
-
     - name: Deploy Flask container
       uses: appleboy/ssh-action@master
       with:
@@ -31,7 +23,14 @@ jobs:
         username: ${{ env.USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          echo "hello world"
-          mkdir -p action-created
+          echo "$PWD"
+          ls
+          if [ -d "${{ env.REPO_DIR }}" ]; then
+            cd "${{ env.REPO_DIR }}"
+            git pull
+          else
+            git clone "${{ env.REPO }}" "${{ env.REPO_DIR }}"
+          fi
+          echo "Deploying to AWS EC2"
 
     
