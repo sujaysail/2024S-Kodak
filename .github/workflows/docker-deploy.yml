@@ -25,12 +25,16 @@ jobs:
         script: |
           echo "$PWD"
           ls
-          if [ -d "${{ env.REPO_DIR }}" ]; then
-            cd "${{ env.REPO_DIR }}"
-            sudo git pull
-          else
+          if [ ! -d "${{ env.REPO_DIR }}" ]; then
             git clone "${{ env.REPO }}" "${{ env.REPO_DIR }}"
+            cd "${{ env.REPO_DIR }}"/Sprint\ 4/flask\ api/
+          else
+            cd "${{ env.REPO_DIR }}"/Sprint\ 4/flask\ api/
           fi
-          echo "Deploying to AWS EC2"
+          git pull
+          docker-compose down
+          docker-compose build
+          docker-compose up -d
+          
 
     
