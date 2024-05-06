@@ -27,7 +27,7 @@ jobs:
           ls
           if [ -d "${{ env.REPO_DIR }}" ]; then
             cd "${{ env.REPO_DIR }}"
-            git pull
+            sudo git pull
           else
             git clone "${{ env.REPO }}" "${{ env.REPO_DIR }}"
           fi
