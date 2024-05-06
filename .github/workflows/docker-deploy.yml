@@ -9,9 +9,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env: 
-        FLASK_HOST: "ec2-54-224-174-201.compute-1.amazonaws.com"
+        FLASK_HOST: ${{ secrets.EC2_FLASK }}
         USERNAME: ubuntu
-        KEY: smarthire-ssh.pem
 
     steps:
     - name: Checkout code
@@ -30,8 +29,9 @@ jobs:
       with:
         host: ${{ env.FLASK_HOST}}
         username: ${{ env.USERNAME }}
-        key: ${{ steps.read_key.outputs.key }}
+        key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          echo "Deploying to AWS EC2"
+          echo "$PWD"
+          mkdir -p action-created
 
     
